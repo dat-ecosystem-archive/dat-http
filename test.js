@@ -15,7 +15,7 @@ tape('replicate file', function (t) {
     var server = http.createServer(ecstatic({ root: datDir }))
     server.listen(9988, function () {
       var storage = datHttp('http://localhost:9988')
-      var httpDrive = hyperdrive(storage)
+      var httpDrive = hyperdrive(storage, {latest: true})
       httpDrive.on('ready', function () {
         tmp(function (err, dir, cleanup) {
           if (err) t.ifErr(err)

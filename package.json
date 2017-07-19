@@ -17,6 +17,7 @@
     "temporary-directory": "^1.0.2"
   },
   "dependencies": {
+    "dat-storage": "^1.0.3",
     "request": "^2.81.0"
   }
 }
