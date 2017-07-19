@@ -1,0 +1,22 @@
+{
+  "name": "dat-http",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ecstatic": "^2.2.1",
+    "hyperdrive": "^9.4.7",
+    "random-access-memory": "^2.4.0",
+    "tape": "^4.7.0",
+    "temporary-directory": "^1.0.2"
+  },
+  "dependencies": {
+    "request": "^2.81.0"
+  }
+}
