@@ -1,37 +1,32 @@
 var request = require('request')
+var datStorage = require('dat-storage')
 
 module.exports = function (host) {
-  return {
-    metadata: function (filename, opts) {
-      var base = host + '/.dat/metadata.'
-      return HTTPFile(base + filename)
-      // if (typeof dir === 'function') return dir('.dat/metadata.' + name)
-      // if (name === 'secret_key') return secretStorage()(path.join(dir, '.dat/metadata.ogd'), {key: opts.key, discoveryKey: opts.discoveryKey})
-      // return raf(path.join(dir, '.dat/metadata.' + name))
-    },
-    content: function (filename, opts, archive) {
-      var base = host + '/.dat/content.'
-      return HTTPFile(base + filename)
-      // if (!archive) archive = opts
-      // if (name === 'data') return createStorage(archive, dir)
-      // if (typeof dir === 'function') return dir('.dat/content.' + name)
-      // return raf(path.join(dir, '.dat/content.' + name))
-    }
-  }
+  return datStorage(function (name) {
+    return HTTPFile(host + '/' + name)
+  })
 }
 
 function HTTPFile (uri, opts) {
   if (!(this instanceof HTTPFile)) return new HTTPFile(uri , opts)
   if (!opts) opts = {}
   this.uri = uri
+  this.length = 0
 }
 
 HTTPFile.prototype.open = function (cb) {
-  if (cb) process.nextTick(cb)
+  var self = this
+  request(this.uri, {encoding: null}, function (err, resp, body) {
+    if (err || resp.statusCode > 299) {
+      return cb(err || new Error('Request Error ' + resp.statusCode))
+    }
+    self.length = body.length
+    cb(null)
+  })
 }
 
 HTTPFile.prototype.write = function (offset, data, cb) {
-  if (cb) process.nextTick(cb)
+  this.open(cb) // hack, fix in hypercore !!
 }
 
 HTTPFile.prototype.read = function (offset, len, cb) {
@@ -39,6 +34,7 @@ HTTPFile.prototype.read = function (offset, len, cb) {
     if (err || resp.statusCode > 299) {
       return cb(err || new Error('Request Error ' + resp.statusCode))
     }
+    if (body.length < offset + len) return cb(new Error('Could not satisfy length'))
     var part = body.slice(offset, offset + len)
     cb(null, part)
   })
