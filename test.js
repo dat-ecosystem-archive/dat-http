@@ -9,6 +9,39 @@ var tmp = require('temporary-directory')
 var ecstatic = require('ecstatic')
 var datHttp = require('./')
 
+tape('can end replication immediately', function (t) {
+  makeTestServer(t, function runTest (datDir, destDir, cleanup) {
+    var storage = datHttp('http://localhost:9988')
+    var httpDrive = hyperdrive(storage, {latest: true})
+    httpDrive.on('ready', function () {
+      Dat(destDir, {key: httpDrive.key}, function (err, dat) {
+        if (err) return t.ifErr(err, 'error')
+        var localReplicate = dat.archive.replicate()
+        var httpReplicate = httpDrive.replicate()
+        localReplicate.pipe(httpReplicate).pipe(localReplicate)
+        localReplicate.end()
+        httpReplicate.end()
+        var pending = 2
+        localReplicate.on('end', function () {
+          console.log('local replicate ended')
+          if (--pending === 0) onEnd()
+        })
+        httpReplicate.on('end', function () {
+          console.log('http replicate ended')
+          if (--pending === 0) onEnd()
+        })
+        function onEnd () {
+          httpDrive.close(function () {
+            dat.close(function () {
+              cleanup()
+            })
+          })
+        }
+      })
+    })
+  })
+})
+
 tape('replicate file', function (t) {
   makeTestServer(t, function runTest (datDir, destDir, cleanup) {
     var storage = datHttp('http://localhost:9988')
@@ -27,7 +60,7 @@ tape('replicate file', function (t) {
           cleanup()
         })
       })
-    })    
+    })
   })
 })
 

@@ -19,7 +19,7 @@ HTTPFile.prototype.open = function (cb) {
   var self = this
   request(this.uri, {encoding: null}, function (err, resp, body) {
     if (err || resp.statusCode > 299) {
-      return cb(err || new Error('Request Error ' + resp.statusCode))
+      return cb(err || new Error('Request Error ' + resp.statusCode + ': ' + self.uri))
     }
     self.length = body.length
     cb(null)
