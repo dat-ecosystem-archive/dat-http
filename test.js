@@ -14,7 +14,7 @@ tape('can end replication immediately', function (t) {
     var storage = datHttp('http://localhost:9988')
     var httpDrive = hyperdrive(storage, {latest: true})
     httpDrive.on('ready', function () {
-      Dat(destDir, {key: httpDrive.key}, function (err, dat) {
+      Dat(destDir, {key: httpDrive.key, sparse: true}, function (err, dat) {
         if (err) return t.ifErr(err, 'error')
         var localReplicate = dat.archive.replicate()
         var httpReplicate = httpDrive.replicate()
@@ -47,7 +47,7 @@ tape('replicate file', function (t) {
     var storage = datHttp('http://localhost:9988')
     var httpDrive = hyperdrive(storage, {latest: true})
     httpDrive.on('ready', function () {
-      Dat(destDir, {key: httpDrive.key}, function (err, dat) {
+      Dat(destDir, {key: httpDrive.key, sparse: true}, function (err, dat) {
         if (err) return t.ifErr(err, 'error')
         var localReplicate = dat.archive.replicate()
         localReplicate.pipe(httpDrive.replicate()).pipe(localReplicate)
@@ -69,7 +69,7 @@ tape('replicate byte range', function (t) {
     var storage = datHttp('http://localhost:9988')
     var httpDrive = hyperdrive(storage, {latest: true})
     httpDrive.on('ready', function () {
-      Dat(destDir, {key: httpDrive.key}, function (err, dat) {
+      Dat(destDir, {key: httpDrive.key, sparse: true}, function (err, dat) {
         if (err) return t.ifErr(err, 'error')
         var localReplicate = dat.archive.replicate()
         localReplicate.pipe(httpDrive.replicate()).pipe(localReplicate)
