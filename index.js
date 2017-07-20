@@ -1,14 +1,15 @@
+var url = require('url')
 var request = require('request')
 var datStorage = require('dat-storage')
 
 module.exports = function (host) {
-  return datStorage(function (name) {
-    return HTTPFile(host + '/' + name)
+  return datStorage(function (filename) {
+    return HTTPFile(url.resolve(host, filename))
   })
 }
 
 function HTTPFile (uri, opts) {
-  if (!(this instanceof HTTPFile)) return new HTTPFile(uri , opts)
+  if (!(this instanceof HTTPFile)) return new HTTPFile(uri, opts)
   if (!opts) opts = {}
   this.uri = uri
   this.length = 0
@@ -30,9 +31,10 @@ HTTPFile.prototype.write = function (offset, data, cb) {
 }
 
 HTTPFile.prototype.read = function (offset, len, cb) {
+  var self = this
   request(this.uri, {encoding: null}, function (err, resp, body) {
     if (err || resp.statusCode > 299) {
-      return cb(err || new Error('Request Error ' + resp.statusCode))
+      return cb(err || new Error('Request Error ' + resp.statusCode + ', ' + self.uri))
     }
     if (body.length < offset + len) return cb(new Error('Could not satisfy length'))
     var part = body.slice(offset, offset + len)
