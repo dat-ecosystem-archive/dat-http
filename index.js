@@ -28,7 +28,7 @@ HTTPFile.prototype.read = function (start, len, cb) {
   var opts = {
     encoding: null, // Buffer response
     headers: {
-      "Range": `bytes=${start}-${end}`
+      "Range": `bytes=${start}-${end - 1}` // byte requests are inclusive
     }
   }
   
@@ -39,8 +39,7 @@ HTTPFile.prototype.read = function (start, len, cb) {
     if (body.length < len) return cb(new Error('Response shorter than requested range'))
     var range = resp.headers['content-range']
     if ((resp.statusCode === 206 || range) && range) { // in case server doesnt respond with 206 but sends range
-      if (body.length !== len) return cb(new Error('Response length different than requested length'))
-      console.log('got range', opts.headers, range, body.length)
+      if (body.length !== len) return cb(new Error(`Response length different than requested length (${body.length}, ${len})`))
       return cb(null, body)
     }
     var part = body.slice(offset, offset + len)
