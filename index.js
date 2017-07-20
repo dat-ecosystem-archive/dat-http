@@ -16,18 +16,11 @@ function HTTPFile (uri, opts) {
 }
 
 HTTPFile.prototype.open = function (cb) {
-  var self = this
-  request(this.uri, {encoding: null}, function (err, resp, body) {
-    if (err || resp.statusCode > 299) {
-      return cb(err || new Error('Request Error ' + resp.statusCode + ': ' + self.uri))
-    }
-    self.length = body.length
-    cb(null)
-  })
+  if (cb) process.nextTick(cb)
 }
 
 HTTPFile.prototype.write = function (offset, data, cb) {
-  this.open(cb) // hack, fix in hypercore !!
+  if (cb) process.nextTick(cb)
 }
 
 HTTPFile.prototype.read = function (offset, len, cb) {
