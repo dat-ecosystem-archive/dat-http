@@ -12,7 +12,6 @@ function HTTPFile (uri, opts) {
   if (!(this instanceof HTTPFile)) return new HTTPFile(uri, opts)
   if (!opts) opts = {}
   this.uri = uri
-  this.length = 0
 }
 
 HTTPFile.prototype.open = function (cb) {
