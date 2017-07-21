@@ -6,7 +6,10 @@
   "scripts": {
     "test": "node test.js"
   },
-  "keywords": ["hyperdrive", "hypercore"],
+  "keywords": [
+    "hyperdrive",
+    "hypercore"
+  ],
   "author": "max ogden",
   "license": "ISC",
   "devDependencies": {
@@ -21,5 +24,13 @@
   "dependencies": {
     "dat-storage": "^1.0.3",
     "request": "^2.81.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datproject/dat-http.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datproject/dat-http/issues"
+  },
+  "homepage": "https://github.com/datproject/dat-http#readme"
 }
