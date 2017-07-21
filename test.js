@@ -74,11 +74,10 @@ tape('replicate byte range', function (t) {
         if (err) return t.ifErr(err, 'error')
         var localReplicate = dat.archive.replicate()
         localReplicate.pipe(httpDrive.replicate()).pipe(localReplicate)
-        var rs = dat.archive.createReadStream('/numbers.txt', {start: 1000, end: 1100})
+        var rs = dat.archive.createReadStream('/numbers.txt', {start: 1000, end: 1099})
         rs.pipe(concat(function (content) {
-          t.equals(content.length, 1000, 'length 1000')
-          t.equals(content[0], 1000, '1000')
-          t.equals(content[100], 1100, '1100')
+          t.equals(content.length, 100, 'length 100')
+          t.equals(content.readUInt32BE(0), 1000/4, '250')
           t.ok(fs.readFileSync(path.join(destDir, 'numbers.txt')), 'file exists')
           cleanup()
         }))
@@ -116,7 +115,7 @@ function tmpDat (t, cb) {
   tmp(function created (err, dir, cleanup) {
     if (err) return cb(err)
     var bigBuf = new Buffer(1024 * 1024 * 10)
-    for (var i = 0; i < bigBuf.length; i++) bigBuf[i] = i
+    for (var i = 0; i < bigBuf.length; i+=4) bigBuf.writeUInt32BE(i/4, i)
     fs.writeFileSync(path.join(dir, 'numbers.txt'), bigBuf)
     fs.writeFileSync(path.join(dir, 'hello.txt'), 'hello')
     Dat(dir, function (err, dat) {

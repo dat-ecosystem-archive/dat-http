@@ -14,6 +14,7 @@
     "hyperdrive": "^9.4.7",
     "random-access-memory": "^2.4.0",
     "tape": "^4.7.0",
+    "dat-node": "^3.5.1",
     "temporary-directory": "^1.0.2"
   },
   "dependencies": {
