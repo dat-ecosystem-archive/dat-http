@@ -12,6 +12,7 @@ function HTTPFile (uri, opts) {
   if (!(this instanceof HTTPFile)) return new HTTPFile(uri, opts)
   if (!opts) opts = {}
   this.uri = uri
+  this.pending = 0
 }
 
 HTTPFile.prototype.open = function (cb) {
@@ -32,7 +33,9 @@ HTTPFile.prototype.read = function (start, len, cb) {
     }
   }
   
+  this.pending++
   request(this.uri, opts, function (err, resp, body) {
+    self.pending--
     if (err || resp.statusCode > 299) {
       return cb(err || new Error('Request Error ' + resp.statusCode + ', ' + self.uri))
     }
@@ -53,6 +56,7 @@ HTTPFile.prototype.del = function (offset, len, cb) {
 }
 
 HTTPFile.prototype.close = function (cb) {
+  if (this.pending) return setTimeout(this.close.bind(this, cb), 100)
   if (cb) process.nextTick(cb)
 }
 
