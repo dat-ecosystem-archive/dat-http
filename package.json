@@ -1,24 +1,24 @@
 {
   "name": "dat-http",
   "version": "1.0.0",
-  "description": "",
+  "description": "An HTTP transport/storage provider for Dat",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["hyperdrive", "hypercore"],
+  "author": "max ogden",
   "license": "ISC",
   "devDependencies": {
+    "concat-stream": "^1.6.0",
+    "dat-node": "^3.5.1",
     "ecstatic": "^2.2.1",
     "hyperdrive": "^9.4.7",
     "random-access-memory": "^2.4.0",
     "tape": "^4.7.0",
-    "dat-node": "^3.5.1",
     "temporary-directory": "^1.0.2"
   },
   "dependencies": {
-    "content-range": "^1.1.0",
     "dat-storage": "^1.0.3",
     "request": "^2.81.0"
   }
