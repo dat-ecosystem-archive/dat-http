@@ -1,3 +1,9 @@
+[![deprecated](http://badges.github.io/stability-badges/dist/deprecated.svg)](https://dat-ecosystem.org/) 
+
+More info on active projects and modules at [dat-ecosystem.org](https://dat-ecosystem.org/) <img src="https://i.imgur.com/qZWlO1y.jpg" width="30" height="30" /> 
+
+---
+
 # dat-http
 
 An HTTP transport/storage provider for Dat, allowing replication of Dats over normal HTTP connections from flat files on the server. Currently only supports read operations, write operations coming in the future (open an issue if you need this).
